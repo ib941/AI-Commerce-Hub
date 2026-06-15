@@ -200,14 +200,15 @@ elif current_page == "🎬 Cinematic Storyboard Architect":
                     st.error(f"System compilation error: {e}")
 
 # =====================================================================
-# 4. EMBED FLOATING VOICEFLOW AI CHAT WIDGET
+# 4. GLOBAL FLOATING VOICEFLOW AI CHAT WIDGET
 # =====================================================================
+# Using window.parent forces the widget to break out of its container frame and render globally
 voiceflow_widget_html = """
 <script type="text/javascript">
   (function(d, t) {
       var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
       v.onload = function() {
-        window.voiceflow.chat.load({
+        window.parent.voiceflow.chat.load({
           verify: { projectID: '6a25a7ff2d3a498b7f05ef64' },
           url: 'https://general-runtime.voiceflow.com',
           voice: {
@@ -216,7 +217,7 @@ voiceflow_widget_html = """
         });
       }
       v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
-  })(document, 'script');
+  })(window.parent.document, 'script');
 </script>
 """
 components.html(voiceflow_widget_html, height=0, width=0)
