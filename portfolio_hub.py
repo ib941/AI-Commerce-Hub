@@ -4,9 +4,25 @@ from google.genai import types
 import streamlit.components.v1 as components
 
 # =====================================================================
-# 1. GLOBAL PAGE CONFIG & LUXURY STYLING
+# 1. GLOBAL PAGE CONFIG & WATERMARK REMOVAL (Must be at the absolute top)
 # =====================================================================
-st.set_page_config(page_title="Ibrahim | Complete Solutions Center", page_icon="✨", layout="centered")
+st.set_page_config(
+    page_title="Ibrahim | Complete Solutions Center", 
+    page_icon="✨", 
+    layout="centered",
+    initial_sidebar_state="expanded"
+)
+
+# Hide Streamlit's native branding and footers globally
+hide_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    div[data-testid="stDecoration"] {display: none;}
+    </style>
+"""
+st.markdown(hide_style, unsafe_allow_html=True)
 
 # Inject your signature dark luxury theme styling directly into Streamlit
 st.markdown("""
@@ -74,7 +90,6 @@ st.markdown("""
 st.sidebar.title("✨ Workspace Menu")
 st.sidebar.write("Navigate between my background showcase and live AI production suites.")
 
-# The master selector tab mechanism
 current_page = st.sidebar.radio(
     "Select Application Window:",
     ["🏠 Creative Portfolio Showcase", "🛍️ AI E-Commerce Content Hub", "🎬 Cinematic Storyboard Architect"]
@@ -91,7 +106,6 @@ if current_page == "🏠 Creative Portfolio Showcase":
     st.markdown("<p style='text-align: center; font-size: 1.1rem;'>Complete Solutions Center | Salla Stores • Photography • Design</p>", unsafe_allow_html=True)
     st.markdown("---")
 
-    # Displaying your services in your card structure layout
     st.markdown("""
         <div class="custom-card">
             <h3>📸 Product Photography</h3>
@@ -202,7 +216,6 @@ elif current_page == "🎬 Cinematic Storyboard Architect":
 # =====================================================================
 # 4. BUG-FREE NATIVE FLOATING VOICEFLOW AI CHAT WIDGET
 # =====================================================================
-# This configures Voiceflow to handle its own premium floating animations natively
 voiceflow_widget_html = """
 <script type="text/javascript">
   (function(d, t) {
@@ -215,7 +228,7 @@ voiceflow_widget_html = """
             url: "https://runtime-api.voiceflow.com"
           },
           render: {
-            mode: 'overlay' // Forces Voiceflow to render its native, perfect open/close bubble
+            mode: 'overlay'
           }
         });
       }
@@ -223,5 +236,4 @@ voiceflow_widget_html = """
   })(window.parent.document, 'script');
 </script>
 """
-# We keep the container dimensions zeroed so it doesn't affect your layout grid
 components.html(voiceflow_widget_html, height=0, width=0)
