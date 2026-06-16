@@ -200,35 +200,11 @@ elif current_page == "🎬 Cinematic Storyboard Architect":
                     st.error(f"System compilation error: {e}")
 
 # =====================================================================
-# 4. FIXED GLOBAL FLOATING VOICEFLOW AI CHAT WIDGET WITH TOGGLE
+# 4. BUG-FREE NATIVE FLOATING VOICEFLOW AI CHAT WIDGET
 # =====================================================================
-# This custom wrapper injects a clean toggle button to open and hide the chat freely
+# This configures Voiceflow to handle its own premium floating animations natively
 voiceflow_widget_html = """
-<div id="vf-chat-wrapper" style="position: fixed; bottom: 80px; right: 20px; width: 400px; height: 600px; z-index: 999999; display: none; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(0, 229, 147, 0.2);">
-    <div id="vflow-chat-container" style="width: 100%; height: 100%;"></div>
-</div>
-
-<button id="vf-toggle-btn" onclick="toggleVfChat()" style="position: fixed; bottom: 20px; right: 20px; z-index: 999999; background-color: #00e593; color: #0b0c10; border: none; padding: 12px 24px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 229, 147, 0.4); display: flex; align-items: center; gap: 8px; font-family: 'Segoe UI', sans-serif;">
-    <span id="vf-btn-icon">🤖</span> <span id="vf-btn-text">Talk to AI Assistant</span>
-</button>
-
 <script type="text/javascript">
-  function toggleVfChat() {
-      var wrapper = document.getElementById('vf-chat-wrapper');
-      var icon = document.getElementById('vf-btn-icon');
-      var text = document.getElementById('vf-btn-text');
-      
-      if (wrapper.style.display === 'none') {
-          wrapper.style.display = 'block';
-          icon.innerText = '❌';
-          text.innerText = 'Close Chat';
-      } else {
-          wrapper.style.display = 'none';
-          icon.innerText = '🤖';
-          text.innerText = 'Talk to AI Assistant';
-      }
-  }
-
   (function(d, t) {
       var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
       v.onload = function() {
@@ -239,8 +215,7 @@ voiceflow_widget_html = """
             url: "https://runtime-api.voiceflow.com"
           },
           render: {
-            mode: 'embedded',
-            target: d.getElementById('vflow-chat-container')
+            mode: 'overlay' // Forces Voiceflow to render its native, perfect open/close bubble
           }
         });
       }
@@ -248,4 +223,5 @@ voiceflow_widget_html = """
   })(window.parent.document, 'script');
 </script>
 """
-components.html(voiceflow_widget_html, height=80, width=200)
+# We keep the container dimensions zeroed so it doesn't affect your layout grid
+components.html(voiceflow_widget_html, height=0, width=0)
