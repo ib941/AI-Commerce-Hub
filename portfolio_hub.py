@@ -1,6 +1,7 @@
 import streamlit as st
-import anthropic
 import base64
+import requests
+import json
 
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -363,7 +364,7 @@ elif "E-Commerce" in page:
 
     st.markdown("""
     <div class="tool-header">
-        <div class="tool-badge">✦ Powered by Claude AI</div>
+        <div class="tool-badge">✦ Powered by AI — Free & Instant</div>
         <p style="color:#8FA8C0; font-size:0.88rem; line-height:1.75; margin:0;">
         Upload your product image and describe your product. The AI will generate 
         bilingual marketing copy, SEO titles, and social media captions — ready to publish.
@@ -408,15 +409,6 @@ elif "E-Commerce" in page:
         else:
             with st.spinner("Crafting your content... جارٍ توليد المحتوى..."):
                 # Build prompt
-                image_part = ""
-                if uploaded_file:
-                    img_bytes = uploaded_file.getvalue()
-                    b64 = base64.standard_b64encode(img_bytes).decode()
-                    ext = uploaded_file.type
-                else:
-                    b64 = None
-                    ext = None
-
                 prompt = f"""You are an expert bilingual (Arabic & English) e-commerce copywriter specializing in premium Saudi/Gulf market products.
 
 Product Name: {product_name}
@@ -461,25 +453,19 @@ Generate professional marketing content in this EXACT structure:
 Keep the tone premium, persuasive, and tailored to the Gulf/Saudi market."""
 
                 try:
-                    client = anthropic.Anthropic()
-
-                    if b64:
-                        messages = [{
-                            "role": "user",
-                            "content": [
-                                {"type": "image", "source": {"type": "base64", "media_type": ext, "data": b64}},
-                                {"type": "text", "text": prompt}
-                            ]
-                        }]
+                    api_url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
+                    headers = {"Content-Type": "application/json"}
+                    payload = {
+                        "inputs": f"<s>[INST] {prompt} [/INST]",
+                        "parameters": {"max_new_tokens": 1200, "temperature": 0.7, "return_full_text": False}
+                    }
+                    resp = requests.post(api_url, headers=headers, json=payload, timeout=60)
+                    resp.raise_for_status()
+                    data = resp.json()
+                    if isinstance(data, list) and len(data) > 0:
+                        result = data[0].get("generated_text", "No output returned.")
                     else:
-                        messages = [{"role": "user", "content": prompt}]
-
-                    response = client.messages.create(
-                        model="claude-sonnet-4-6",
-                        max_tokens=1500,
-                        messages=messages
-                    )
-                    result = response.content[0].text
+                        result = str(data)
 
                     st.markdown('<div class="result-label">✦ Generated Content — المحتوى المولَّد</div>', unsafe_allow_html=True)
                     st.markdown(f'<div class="result-box">{result}</div>', unsafe_allow_html=True)
@@ -498,7 +484,7 @@ elif "Storyboard" in page:
 
     st.markdown("""
     <div class="tool-header">
-        <div class="tool-badge">✦ Powered by Claude AI</div>
+        <div class="tool-badge">✦ Powered by AI — Free & Instant</div>
         <p style="color:#8FA8C0; font-size:0.88rem; line-height:1.75; margin:0;">
         Describe your commercial concept in plain words. The AI transforms it into a 
         structured, director-level video production brief with shot lists, camera directions, 
@@ -614,13 +600,19 @@ Create a detailed, professional storyboard brief in this EXACT structure:
 Make it feel like a real premium production document a Saudi commercial director would be proud to execute."""
 
                 try:
-                    client = anthropic.Anthropic()
-                    response = client.messages.create(
-                        model="claude-sonnet-4-6",
-                        max_tokens=1800,
-                        messages=[{"role": "user", "content": prompt}]
-                    )
-                    result = response.content[0].text
+                    api_url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
+                    headers = {"Content-Type": "application/json"}
+                    payload = {
+                        "inputs": f"<s>[INST] {prompt} [/INST]",
+                        "parameters": {"max_new_tokens": 1500, "temperature": 0.7, "return_full_text": False}
+                    }
+                    resp = requests.post(api_url, headers=headers, json=payload, timeout=60)
+                    resp.raise_for_status()
+                    data = resp.json()
+                    if isinstance(data, list) and len(data) > 0:
+                        result = data[0].get("generated_text", "No output returned.")
+                    else:
+                        result = str(data)
 
                     st.markdown('<div class="result-label">✦ Your Storyboard Brief — اللوحة القصصية</div>', unsafe_allow_html=True)
                     st.markdown(f'<div class="result-box">{result}</div>', unsafe_allow_html=True)
