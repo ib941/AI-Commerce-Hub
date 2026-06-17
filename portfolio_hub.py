@@ -1,7 +1,6 @@
 import streamlit as st
 import base64
 import requests
-import json
 
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -453,19 +452,23 @@ Generate professional marketing content in this EXACT structure:
 Keep the tone premium, persuasive, and tailored to the Gulf/Saudi market."""
 
                 try:
-                    api_url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
-                    headers = {"Content-Type": "application/json"}
-                    payload = {
-                        "inputs": f"<s>[INST] {prompt} [/INST]",
-                        "parameters": {"max_new_tokens": 1200, "temperature": 0.7, "return_full_text": False}
+                    groq_key = st.secrets["GROQ_API_KEY"]
+                    headers = {
+                        "Authorization": f"Bearer {groq_key}",
+                        "Content-Type": "application/json"
                     }
-                    resp = requests.post(api_url, headers=headers, json=payload, timeout=60)
+                    payload = {
+                        "model": "llama3-8b-8192",
+                        "messages": [{"role": "user", "content": prompt}],
+                        "max_tokens": 1200,
+                        "temperature": 0.7
+                    }
+                    resp = requests.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers=headers, json=payload, timeout=60
+                    )
                     resp.raise_for_status()
-                    data = resp.json()
-                    if isinstance(data, list) and len(data) > 0:
-                        result = data[0].get("generated_text", "No output returned.")
-                    else:
-                        result = str(data)
+                    result = resp.json()["choices"][0]["message"]["content"]
 
                     st.markdown('<div class="result-label">✦ Generated Content — المحتوى المولَّد</div>', unsafe_allow_html=True)
                     st.markdown(f'<div class="result-box">{result}</div>', unsafe_allow_html=True)
@@ -600,19 +603,23 @@ Create a detailed, professional storyboard brief in this EXACT structure:
 Make it feel like a real premium production document a Saudi commercial director would be proud to execute."""
 
                 try:
-                    api_url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
-                    headers = {"Content-Type": "application/json"}
-                    payload = {
-                        "inputs": f"<s>[INST] {prompt} [/INST]",
-                        "parameters": {"max_new_tokens": 1500, "temperature": 0.7, "return_full_text": False}
+                    groq_key = st.secrets["GROQ_API_KEY"]
+                    headers = {
+                        "Authorization": f"Bearer {groq_key}",
+                        "Content-Type": "application/json"
                     }
-                    resp = requests.post(api_url, headers=headers, json=payload, timeout=60)
+                    payload = {
+                        "model": "llama3-8b-8192",
+                        "messages": [{"role": "user", "content": prompt}],
+                        "max_tokens": 1500,
+                        "temperature": 0.7
+                    }
+                    resp = requests.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers=headers, json=payload, timeout=60
+                    )
                     resp.raise_for_status()
-                    data = resp.json()
-                    if isinstance(data, list) and len(data) > 0:
-                        result = data[0].get("generated_text", "No output returned.")
-                    else:
-                        result = str(data)
+                    result = resp.json()["choices"][0]["message"]["content"]
 
                     st.markdown('<div class="result-label">✦ Your Storyboard Brief — اللوحة القصصية</div>', unsafe_allow_html=True)
                     st.markdown(f'<div class="result-box">{result}</div>', unsafe_allow_html=True)
