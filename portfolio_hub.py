@@ -3,75 +3,49 @@ from google import genai
 from google.genai import types
 import streamlit.components.v1 as components
 
-# =====================================================================
-# 1. PAGE CONFIG & STYLING
-# =====================================================================
-st.set_page_config(page_title="Ibrahim | Solutions", layout="wide", initial_sidebar_state="expanded")
+# 1. CORE SETUP
+st.set_page_config(page_title="Ibrahim | Solutions", layout="centered")
 
-# Master CSS: Force mobile sidebar, hide watermarks, style buttons
+# Basic styling for luxury theme
 st.markdown("""
     <style>
-        /* Force Sidebar Visibility */
-        [data-testid="stSidebar"] { display: block !important; }
-        section[data-testid="stSidebar"] { z-index: 9999 !important; }
-        
-        /* Clean Branding */
-        #MainMenu, footer, header { visibility: hidden !important; }
-        div[data-testid="stDecoration"] { display: none !important; }
-        
-        /* Layout */
         .stApp { background-color: #0b0c10; color: #e5e7eb; }
         .custom-card {
             background-color: #12141c; border: 1px solid rgba(0, 229, 147, 0.2);
-            border-radius: 16px; padding: 25px; margin-bottom: 20px;
+            border-radius: 16px; padding: 20px; margin-bottom: 15px;
         }
-        
-        /* WhatsApp Button Motion */
-        .whatsapp-btn {
-            background-color: #25D366; color: white !important;
-            padding: 12px 30px; border-radius: 30px; font-weight: 700;
-            display: inline-block; text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        .whatsapp-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px #25D366; }
     </style>
 """, unsafe_allow_html=True)
 
-# =====================================================================
-# 2. SIDEBAR (The Single Source of Truth)
-# =====================================================================
+# 2. SIDEBAR
 st.sidebar.title("✨ Workspace Menu")
 current_page = st.sidebar.radio(
-    "Select Application Window:",
+    "Navigate:",
     ["🏠 Creative Portfolio Showcase", "🛍️ AI E-Commerce Content Hub", "🎬 Cinematic Storyboard Architect"]
 )
 
-# =====================================================================
-# 3. PAGES
-# =====================================================================
+# 3. PAGE LOGIC
 if current_page == "🏠 Creative Portfolio Showcase":
     st.title("Ibrahim")
     st.subheader("Complete Solutions Center")
     
+    # These three are now explicitly rendered together
     st.markdown("""
-        <div class="custom-card">
-            <h3>📸 Product Photography</h3>
-            <p>High-end commercial & luxury product shots.</p>
-        </div>
-        <a href="https://wa.me/966534657849" target="_blank" class="whatsapp-btn">💬 Chat on WhatsApp</a>
+        <div class="custom-card"><h3>📸 Product Photography</h3><p>High-end commercial & luxury product shots.</p></div>
+        <div class="custom-card"><h3>🛒 Salla Store Setup</h3><p>Professional end-to-end e-commerce configurations.</p></div>
+        <div class="custom-card"><h3>🎨 Poster Design</h3><p>Dynamic, premium social media posters.</p></div>
     """, unsafe_allow_html=True)
+    st.link_button("💬 Chat on WhatsApp", "https://wa.me/966534657849")
 
 elif current_page == "🛍️ AI E-Commerce Content Hub":
     st.title("🛍️ AI E-Commerce Content Hub")
-    # ... your existing logic here ...
+    # Add your logic back here in a clean way...
 
 elif current_page == "🎬 Cinematic Storyboard Architect":
     st.title("🎬 Cinematic Storyboard Architect")
-    # ... your existing logic here ...
+    # Add your logic back here in a clean way...
 
-# =====================================================================
 # 4. WIDGET
-# =====================================================================
 voiceflow_widget_html = """
 <script type="text/javascript">
   (function(d, t) {
