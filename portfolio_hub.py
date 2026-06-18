@@ -347,7 +347,7 @@ if "Portfolio" in page:
     st.markdown('<div class="gold-line"></div>', unsafe_allow_html=True)
 
     st.markdown("""
-    <a class="cta-btn" href="https://wa.me/966500000000" target="_blank">
+    <a class="cta-btn" href="https://wa.me/966534657849" target="_blank">
         💬 &nbsp; Chat on WhatsApp &nbsp;·&nbsp; تواصل معي
     </a>
     """, unsafe_allow_html=True)
