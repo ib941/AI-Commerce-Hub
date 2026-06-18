@@ -458,7 +458,7 @@ Keep the tone premium, persuasive, and tailored to the Gulf/Saudi market."""
                         "Content-Type": "application/json"
                     }
                     payload = {
-                        "model": "llama3-8b-8192",
+                        "model": "llama-3.1-8b-instant",
                         "messages": [{"role": "user", "content": prompt}],
                         "max_tokens": 1200,
                         "temperature": 0.7
@@ -609,7 +609,7 @@ Make it feel like a real premium production document a Saudi commercial director
                         "Content-Type": "application/json"
                     }
                     payload = {
-                        "model": "llama3-8b-8192",
+                        "model": "llama-3.1-8b-instant",
                         "messages": [{"role": "user", "content": prompt}],
                         "max_tokens": 1500,
                         "temperature": 0.7
