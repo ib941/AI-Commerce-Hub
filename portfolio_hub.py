@@ -312,7 +312,7 @@ if "Portfolio" in page:
 
     st.markdown("""
     <p style="color:#8FA8C0; font-size:0.95rem; line-height:1.85; max-width:640px;">
-    Premium creative and digital services — from luxury product photography to AI-powered 
+    Premium creative and digital services — from luxury product photography to AI-powered
     e-commerce solutions. Every deliverable is crafted to the highest professional standard.
     <br><br>
     <span style="direction:rtl; display:block; color:#7A8FA6; font-size:0.88rem;">
@@ -365,7 +365,7 @@ elif "E-Commerce" in page:
     <div class="tool-header">
         <div class="tool-badge">✦ Powered by AI — Free & Instant</div>
         <p style="color:#8FA8C0; font-size:0.88rem; line-height:1.75; margin:0;">
-        Upload your product image and describe your product. The AI will generate 
+        Upload your product image and describe your product. The AI will generate
         bilingual marketing copy, SEO titles, and social media captions — ready to publish.
         <br><span style="direction:rtl; display:block; margin-top:0.4rem; color:#6A7F96; font-size:0.82rem;">
         ارفع صورة منتجك وصفه، وسيولّد الذكاء الاصطناعي محتوى تسويقياً احترافياً باللغتين.
@@ -408,13 +408,14 @@ elif "E-Commerce" in page:
         else:
             with st.spinner("Crafting your content... جارٍ توليد المحتوى..."):
                 # Build prompt
-                prompt = f"""You are an expert bilingual (Arabic & English) e-commerce copywriter specializing in premium Saudi/Gulf market products.
+                # Prevent delimiter breaking
+                safe_product_name = product_name.replace('"""', '"')
+                safe_product_desc = (product_desc if product_desc else 'Not provided').replace('"""', '"')
+                safe_platform = platform.replace('"""', '"')
 
-Product Name: {product_name}
-Description: {product_desc if product_desc else 'Not provided'}
-Target Platform: {platform}
+                system_prompt = """You are an expert bilingual (Arabic & English) e-commerce copywriter specializing in premium Saudi/Gulf market products.
 
-Generate professional marketing content in this EXACT structure:
+Generate professional marketing content in this EXACT structure based on the user's provided Product Name, Description, and Target Platform:
 
 ---
 🇸🇦 ARABIC CONTENT / المحتوى العربي
@@ -451,6 +452,8 @@ Generate professional marketing content in this EXACT structure:
 
 Keep the tone premium, persuasive, and tailored to the Gulf/Saudi market."""
 
+                user_prompt = f"Product Name: \"\"\"{safe_product_name}\"\"\"\nDescription: \"\"\"{safe_product_desc}\"\"\"\nTarget Platform: \"\"\"{safe_platform}\"\"\""
+
                 try:
                     groq_key = st.secrets["GROQ_API_KEY"]
                     headers = {
@@ -459,7 +462,10 @@ Keep the tone premium, persuasive, and tailored to the Gulf/Saudi market."""
                     }
                     payload = {
                         "model": "llama-3.1-8b-instant",
-                        "messages": [{"role": "user", "content": prompt}],
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt}
+                        ],
                         "max_tokens": 1200,
                         "temperature": 0.7
                     }
@@ -489,8 +495,8 @@ elif "Storyboard" in page:
     <div class="tool-header">
         <div class="tool-badge">✦ Powered by AI — Free & Instant</div>
         <p style="color:#8FA8C0; font-size:0.88rem; line-height:1.75; margin:0;">
-        Describe your commercial concept in plain words. The AI transforms it into a 
-        structured, director-level video production brief with shot lists, camera directions, 
+        Describe your commercial concept in plain words. The AI transforms it into a
+        structured, director-level video production brief with shot lists, camera directions,
         and scene-by-scene breakdowns.
         <br><span style="direction:rtl; display:block; margin-top:0.4rem; color:#6A7F96; font-size:0.82rem;">
         صِف فكرتك التجارية بكلماتك، وسيحوّلها الذكاء الاصطناعي إلى سكريبت إنتاج احترافي.
@@ -543,14 +549,15 @@ elif "Storyboard" in page:
             st.warning("Please describe your concept first. / الرجاء وصف فكرتك أولاً.")
         else:
             with st.spinner("Architecting your storyboard... جارٍ بناء اللوحة القصصية..."):
-                prompt = f"""You are an award-winning commercial director and storyboard architect with expertise in luxury brand filmmaking for the Gulf/Saudi market.
+                # Prevent delimiter breaking
+                safe_brand = (brand_name if brand_name else 'Not specified').replace('"""', '"')
+                safe_concept = concept.replace('"""', '"')
+                safe_video_type = video_type.replace('"""', '"')
+                safe_mood = mood.replace('"""', '"')
 
-Brand: {brand_name if brand_name else 'Not specified'}
-Concept: {concept}
-Video Type: {video_type}
-Mood & Tone: {mood}
+                system_prompt = """You are an award-winning commercial director and storyboard architect with expertise in luxury brand filmmaking for the Gulf/Saudi market.
 
-Create a detailed, professional storyboard brief in this EXACT structure:
+Create a detailed, professional storyboard brief in this EXACT structure based on the user's provided Brand, Concept, Video Type, and Mood & Tone:
 
 ---
 🎬 PRODUCTION BRIEF
@@ -602,6 +609,8 @@ Create a detailed, professional storyboard brief in this EXACT structure:
 
 Make it feel like a real premium production document a Saudi commercial director would be proud to execute."""
 
+                user_prompt = f"Brand: \"\"\"{safe_brand}\"\"\"\nConcept: \"\"\"{safe_concept}\"\"\"\nVideo Type: \"\"\"{safe_video_type}\"\"\"\nMood & Tone: \"\"\"{safe_mood}\"\"\""
+
                 try:
                     groq_key = st.secrets["GROQ_API_KEY"]
                     headers = {
@@ -610,7 +619,10 @@ Make it feel like a real premium production document a Saudi commercial director
                     }
                     payload = {
                         "model": "llama-3.1-8b-instant",
-                        "messages": [{"role": "user", "content": prompt}],
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt}
+                        ],
                         "max_tokens": 1500,
                         "temperature": 0.7
                     }
